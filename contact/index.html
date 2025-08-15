@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="icon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact (@aaaooouuunnn)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #000000;
+      font-family: 'DM Sans', sans-serif;
+      color: #BFBFBF;
+      padding: 96px 8px;
+    }
+    .top-header {
+      width: 100%;
+      background: #000000;
+      padding: 24px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+    }
+    .home-icon {
+      color: #BFBFBF;
+      font-size: 1.5em;
+      text-decoration: none;
+    }
+    .home-icon:hover {
+      color: #ffffff;
+      transition: color 0.25s;
+    }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      background: #000000;
+      padding: 30px;
+      border-radius: 16px;
+      margin-top: 120px;
+      margin-bottom: 120px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    .row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .row .field {
+      flex: 1;
+      min-width: 200px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 1.5em;
+      background-color: #ffffff;
+      color: #151515;
+      font-size: 16px;
+    }
+    input::placeholder, textarea::placeholder {
+      color: #505050;
+    }
+    button {
+      background-color: #252525;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 1.5em;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:disabled {
+      background-color: #444;
+      cursor: wait;
+    }
+    button:hover:not(:disabled) {
+      background-color: #ffffff;
+      color: black;
+      transition: color, background-color 0.25s;
+    }
+    #msg-counter {
+      font-size: 0.85em;
+      color: #777;
+      margin-top: -15px;
+      margin-bottom: 20px;
+      text-align: right;
+    }
+    .footer {
+      width: 100%;
+      background: #000000;
+      padding: 24px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+    }
+    .footer a {
+      color: #BFBFBF;
+      font-size: 1.5em;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      color: #ffffff;
+      transition: color 0.25s;
+    }
+  </style>
+  <script src="https://www.google.com/recaptcha/api.js?render=6LeF04ErAAAAAGY-hVkTt8aaZ1YDJiPBPHHidfcq"></script>
+
+</head>
+<body>
+  <div class="top-header">
+    <a href="https://aaaooouuunnn.com" class="home-icon" title="Home">
+      <i class="fas fa-home"></i>
+    </a>
+  </div>
+
+  <div class="container">
+    <form id="contactForm" action="https://formsubmit.co/email@aaaooouuunnn.com" method="POST">
+      <!-- Honeypot field -->
+      <input type="text" name="_honey" id="honey" style="display:none">
+      <!-- Disable reCAPTCHA -->
+      <input type="hidden" name="_captcha" value="false">
+      <!-- Timestamp -->
+      <input type="hidden" name="timestamp" id="timestamp">
+      <!-- Time spent on page -->
+      <input type="hidden" name="time_spent" id="timeSpent">
+
+      <div class="row">
+        <div class="field">
+          <input type="text" id="name" name="name" placeholder="Name" required>
+        </div>
+        <div class="field">
+          <input type="text" id="company" name="company" placeholder="Company Name">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <input type="email" id="email" name="email" placeholder="Email Address" required>
+        </div>
+        <div class="field">
+          <input type="tel" id="phone" name="phone" placeholder="Phone Number">
+        </div>
+      </div>
+
+      <input type="text" id="subject" name="subject" placeholder="Subject" required>
+      <textarea id="message" name="message" rows="10" placeholder="Message / Content" required style="font-family: Arial, sans-serif;"></textarea>
+      <div id="msg-counter">0 / 1000 characters</div>
+      <input type="hidden" name="recaptcha_token" id="recaptchaToken">
+
+      <button type="submit" id="submitBtn">
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </form>
+  </div>
+
+  <div class="footer">
+    <a href="mailto:email@aaaooouuunnn.com" title="Email"><i class="fas fa-envelope"></i></a>
+    <a href="https://linkedin.com/in/aaaooouuunnn" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    <a href="https://instagram.com/aaaooouuunnn" title="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://youtube.com/@aaaooouuunnn" title="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://twitter.com/aaaooouuunnn" title="Twitter/X"><i class="fab fa-twitter"></i></a>
+  </div>
+
+    <script>
+      const form = document.getElementById('contactForm');
+      const messageField = document.getElementById('message');
+      const counter = document.getElementById('msg-counter');
+      const submitBtn = document.getElementById('submitBtn');
+      const pageOpenedAt = Date.now();
+
+      // Set timestamp when page loads
+      document.getElementById('timestamp').value = new Date().toISOString();
+
+      // Live character counter
+      messageField.addEventListener('input', () => {
+        counter.textContent = `${messageField.value.length} / 1000 characters`;
+      });
+
+      // Format time as "X minutes, Y seconds"
+      function formatTimeSpent(ms) {
+        const totalSeconds = Math.floor(ms / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes} minute${minutes !== 1 ? 's' : ''}, ${seconds} second${seconds !== 1 ? 's' : ''}`;
+      }
+
+      // UPDATED SUBMIT HANDLER
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const now = Date.now();
+        const timeSpent = formatTimeSpent(now - pageOpenedAt);
+        document.getElementById('timeSpent').value = timeSpent;
+
+        const honey = document.getElementById('honey').value.trim();
+        const subject = document.getElementById('subject').value.trim();
+        const message = messageField.value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const blacklist = ["buy", "crypto", "sex", "viagra", "loan", "casino", "prize", "lottery", "win", "download", "price", "sell", "reward", "urgent", "withdraw"];
+        const linkRegex = /(https?:\/\/|www\.|\.\w{2,})/i;
+        const phoneRegex = /^\+\d{1,3}\s?\d{4,}$/;
+
+        if (now - pageOpenedAt < 3000) {
+          alert("Please wait a few seconds before submitting.");
+          return;
+        }
+
+        if (honey !== '') {
+          alert("Bot detected.");
+          return;
+        }
+
+        if (linkRegex.test(subject) || linkRegex.test(message)) {
+          alert("Links are not allowed in Subject or Message / Content.");
+          return;
+        }
+
+        if (subject.length < 20) {
+          alert("Subject must be at least 20 characters.");
+          return;
+        }
+        if (message.length < 100) {
+          alert("Message must be at least 100 characters.");
+          return;
+        }
+
+        for (const word of blacklist) {
+          if (message.toLowerCase().includes(word)) {
+            alert("Your message contains restricted words.");
+            return;
+          }
+        }
+
+        if (phone !== '' && !phoneRegex.test(phone)) {
+          alert("Phone number must include a valid country code (e.g., +1, +44, etc.).");
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = "Verifying...";
+
+        grecaptcha.ready(function () {
+          grecaptcha.execute('6LeF04ErAAAAAGY-hVkTt8aaZ1YDJiPBPHHidfcq', { action: 'contact' }).then(function (token) {
+            document.getElementById('recaptchaToken').value = token;
+
+            const formData = new FormData(form);
+
+          fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          }).then(response => {
+            if (response.ok) {
+              // Show confirmation message
+              document.querySelector('.container').innerHTML = `
+                <h2>Thank you!</h2>
+                <p>Your message has been sent successfully. We will get back to you soon.</p>
+              `;
+            } else {
+              throw new Error('Network response was not ok.');
+            }
+          }).catch(error => {
+            alert('There was a problem sending your message. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i>';
+          });
+        }).catch(() => {
+          alert('reCAPTCHA verification failed. Please try again.');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i>';
+        });
+      });
+    });
+    </script>
+
+</body>
+</html>
