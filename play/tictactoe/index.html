@@ -1,535 +1,656 @@
 ﻿<!doctype html>
 <html lang="en">
+
 <head>
-<link rel="icon" type="image/png" href="icon.png">
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Super Tic Tac Toe</title>
-<style>
-  :root{
-    --bg:#000000;
-    --panel:#151515;
-    --panel-2:#303030;
-    --x-color:#FFA500;
-    --o-color:#FF3535;
-    --accent:#6b4a12; /* subtle brown/gold (used sparingly) */
-    --muted:#8a8a8a;
-    --card-radius:12px;
-  }
+  <link rel="icon" type="image/png" href="icon.png">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Super Tic Tac Toe</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --panel: #151515;
+      --panel-2: #303030;
+      --x-color: #FFA500;
+      --o-color: #FF3535;
+      --accent: #6b4a12;
+      /* subtle brown/gold (used sparingly) */
+      --muted: #8a8a8a;
+      --card-radius: 12px;
+    }
 
-  /* Basic layout */
-  html,body{
-    height:100%;
-    margin:0;
-    background:var(--bg);
-    font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;
-    color:#e6e6e6;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-  }
+    /* Basic layout */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      color: #e6e6e6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-  .wrap{
-    max-width:1280px;
-    margin:24px auto;
-    display:flex;
-    gap:28px;
-    align-items:flex-start;
-    padding:0 20px;
-  }
+    .board-container {
+      display: flex;
+      align-items: center;
+      /* flex-wrap: wrap; */
+    }
 
-  /* Left column (game) */
-  .left{ flex:0 0 780px; }
-  h1{ font-size:34px; margin:6px 0 8px 0; font-weight:700; }
-  p.lead{ margin:0 0 14px 0; color:#bfbfbf; }
+    .wrap {
+      max-width: 1280px;
+      margin: 24px auto;
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      padding: 0 20px;
+    }
 
-  .controls{ display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+    /* Left column (game) */
+    .left {
+      flex: 0 0 780px;
+    }
 
-  .current{
-    background:var(--panel);
-    border-radius:8px;
-    padding:8px 12px;
-    display:inline-flex;
-    gap:8px;
-    align-items:center;
-    font-size:14px;
-    border:1px solid #2a2a2a;
-  }
+    h1 {
+      font-size: 34px;
+      margin: 6px 0 8px 0;
+      font-weight: 700;
+    }
 
-  /* Dot for current player - adjusted so emoji stays centered and clipped correctly */
-  .dot{
-    width:22px;
-    height:22px;
-    border-radius:6px;
-    display:inline-grid;
-    place-items:center;
-    font-weight:700;
-    line-height:1;
-    font-size:18px; /* emoji scaling */
-    user-select:none;
-  }
+    p.lead {
+      margin: 0 0 14px 0;
+      color: #bfbfbf;
+    }
 
-  .btn{
-    background:var(--panel);
-    border:1px solid #2a2a2a;
-    padding:8px 16px;
-    border-radius:8px;
-    color:#e6e6e6;
-    cursor:pointer;
-  }
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
 
-  .board-wrap{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:18px;
-    width:780px;
-  }
+    .current {
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 14px;
+      border: 1px solid #2a2a2a;
+    }
 
-  /* Small boards (each of the 9 boards) */
-  .small-board{
-    background:linear-gradient(180deg,#242424,#1b1b1b);
-    border-radius:14px;
-    padding:10px;
-    /* removed outer gold shadow as requested, kept inset dark ring for the same visual frame */
-    box-shadow: inset 0 0 0 6px rgba(48,48,48,0.6);
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:8px;
-    width:240px;
-    height:240px;
-    box-sizing:border-box;
-    position:relative;
-    transition:box-shadow .12s ease, outline .12s ease;
-  }
+    /* Dot for current player - adjusted so emoji stays centered and clipped correctly */
+    .dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: inline-grid;
+      place-items: center;
+      font-weight: 700;
+      line-height: 1;
+      font-size: 18px;
+      /* emoji scaling */
+      user-select: none;
+    }
 
-  /* active board gets a subtle outline but no yellow glow */
-  .small-board.active{
-    outline:4px solid rgba(255,255,255,0.04);
-    box-shadow: inset 0 0 0 6px rgba(48,48,48,0.6);
-  }
+    .btn {
+      background: var(--panel);
+      border: 1px solid #2a2a2a;
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: #e6e6e6;
+      cursor: pointer;
+    }
 
-  .small-board.won::after{
-    content:"";
-    position:absolute;
-    inset:6px;
-    border-radius:10px;
-    background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(0,0,0,0));
-    pointer-events:none;
-  }
+    .board-wrap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      width: 780px;
+    }
 
-  /* cells inside small boards */
-  .cell{
-    background:var(--panel-2);
-    border-radius:8px;
-    min-width:0;
-    min-height:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    aspect-ratio:1 / 1;
-    cursor:pointer;
-    user-select:none;
-    transition:transform .06s ease;
-    box-shadow:inset 0 -2px 0 rgba(0,0,0,0.4);
-  }
+    /* Small boards (each of the 9 boards) */
+    .small-board {
+      background: linear-gradient(180deg, #242424, #1b1b1b);
+      border-radius: 14px;
+      padding: 10px;
+      /* removed outer gold shadow as requested, kept inset dark ring for the same visual frame */
+      box-shadow: inset 0 0 0 6px rgba(48, 48, 48, 0.6);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 240px;
+      height: 240px;
+      box-sizing: border-box;
+      position: relative;
+      transition: box-shadow .12s ease, outline .12s ease;
+    }
 
-  .cell:active{ transform:scale(.98); }
-  .cell.disabled{ cursor:default; opacity:.55; }
+    /* active board gets a subtle outline but no yellow glow */
+    .small-board.active {
+      outline: 4px solid rgba(255, 255, 255, 0.04);
+      box-shadow: inset 0 0 0 6px rgba(48, 48, 48, 0.6);
+    }
 
-  /* size for SVG and emoji inside cells */
-  .sym{ width:44px; height:44px; }
+    .small-board.won::after {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0));
+      pointer-events: none;
+    }
 
-  /* right column (info) */
-  .right{ flex:0 0 340px; }
-  .card{
-    background:var(--panel);
-    border-radius:12px;
-    padding:18px;
-    box-sizing:border-box;
-    border:1px solid #2a2a2a;
-    margin-bottom:14px;
-  }
+    /* cells inside small boards */
+    .cell {
+      background: var(--panel-2);
+      border-radius: 8px;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      user-select: none;
+      transition: transform .06s ease;
+      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+    }
 
-  .game-info h3{ margin:0 0 8px 0; font-size:18px; }
+    .cell:active {
+      transform: scale(.98);
+    }
 
-  .info-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
-  .small-state-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-  .small-state{
-    background:var(--panel-2);
-    padding:6px 8px;
-    border-radius:8px;
-    text-align:center;
-    font-size:14px;
-  }
-  .small-state.empty{ opacity:.6; }
+    .cell.disabled {
+      cursor: default;
+      opacity: .55;
+    }
 
-  .how{ color:#bdbdbd; font-size:13px; line-height:1.45; }
-  .history-list{ height:140px; overflow:auto; background:#232323; padding:10px; border-radius:8px; color:#d2d2d2; font-size:13px; }
-  .footer-note{ color:#9a9a9a; font-size:12px; margin-top:6px; }
+    /* size for SVG and emoji inside cells */
+    .sym {
+      width: 44px;
+      height: 44px;
+    }
 
-  .small-winner{
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    pointer-events:none;
-    background:linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35));
-    border-radius:14px;
-    font-size:46px;
-  }
+    /* right column (info) */
+    .right {
+      flex: 0 0 340px;
+    }
 
-  /* responsive */
-  @media (max-width:880px){
-    .wrap{ flex-direction:column; align-items:center; }
-    .left, .right{ flex:unset; width:100%; }
-    .board-wrap{ width:720px; grid-template-columns:repeat(3,1fr); }
-    .small-board{ width:100%; height:220px; }
-  }
+    .card {
+      background: var(--panel);
+      border-radius: 12px;
+      padding: 18px;
+      box-sizing: border-box;
+      border: 1px solid #2a2a2a;
+      margin-bottom: 14px;
+    }
 
-  .label-muted{ color:#b7b7b7; font-size:13px; }
-  .row{ display:flex; gap:10px; align-items:center; }
-  .pill{ background:#2b2b2b; padding:7px 10px; border-radius:8px; border:1px solid #232323; }
+    .game-info h3 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+    }
 
-</style>
+    .info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .small-state-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .small-state {
+      background: var(--panel-2);
+      padding: 6px 8px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .small-state.empty {
+      opacity: .6;
+    }
+
+    .how {
+      color: #bdbdbd;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .history-list {
+      height: 140px;
+      overflow: auto;
+      background: #232323;
+      padding: 10px;
+      border-radius: 8px;
+      color: #d2d2d2;
+      font-size: 13px;
+    }
+
+    .footer-note {
+      color: #9a9a9a;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .small-winner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35));
+      border-radius: 14px;
+      font-size: 46px;
+    }
+
+    @media(max-width: 1150px) {
+      .board-container {
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+
+      .wrap {
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    /* responsive */
+    @media (max-width:880px) {
+      .wrap {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .left,
+      .right {
+        flex: unset;
+        width: 100%;
+      }
+
+      .board-wrap {
+        width: 720px;
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .small-board {
+        width: 100%;
+        height: 220px;
+      }
+    }
+
+    .label-muted {
+      color: #b7b7b7;
+      font-size: 13px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      background: #2b2b2b;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid #232323;
+    }
+  </style>
 </head>
+
 <body>
-<div class="wrap">
-  <div class="left">
-    <h1>Super Tic Tac Toe</h1>
-    <p class="lead">Play on the 3×3 boards. Win small boards to win the game.</p>
+  <div class="wrap">
+    <div class="left">
+      <h1>Super Tic Tac Toe</h1>
+      <p class="lead">Play on the 3×3 boards. Win small boards to win the game.</p>
 
-    <div class="controls">
-      <div class="current" id="currentIndicator">
-        <span class="label-muted">Current</span>
-        <div style="width:10px"></div>
-        <div class="dot" id="playerDot" title="Current player">
-          <!-- emoji injected by JS -->
+      <div class="controls">
+        <div class="current" id="currentIndicator">
+          <span class="label-muted">Current</span>
+          <div style="width:10px"></div>
+          <div class="dot" id="playerDot" title="Current player">
+            <!-- emoji injected by JS -->
+          </div>
+          <div style="width:8px"></div>
+          <div id="playerText" style="color:#e6e6e6;font-weight:600">X</div>
         </div>
-        <div style="width:8px"></div>
-        <div id="playerText" style="color:#e6e6e6;font-weight:600">X</div>
+        <button class="btn" id="resetBtn">Reset</button>
       </div>
-      <button class="btn" id="resetBtn">Reset</button>
+
+      <div class="board-container">
+        <div class="board-wrap" id="bigBoard">
+          <!-- small boards are injected by JS -->
+
+        </div>
+        <div class="right">
+          <div class="card game-info">
+            <h3>Game Info</h3>
+            <div class="label-muted">Active board: <span id="activeBoardLabel">Any</span></div>
+            <div style="height:8px"></div>
+            <div class="label-muted">Overall winner: <span id="overallWinner">-</span></div>
+
+            <div style="height:12px"></div>
+            <div class="label-muted" style="margin-bottom:8px">Small boards:</div>
+            <div class="small-state-grid" id="smallBoardsState">
+              <!-- states -->
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>How to play</h3>
+            <div class="how">
+              <ol>
+                <li>Players alternate placing marks inside a small 3×3 board.</li>
+                <li>Your move sends the opponent to the corresponding small board by cell index (0–8).</li>
+                <li>If that small board is finished, the opponent may play anywhere.</li>
+                <li>Win three small boards in a row to win the game.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>History</h3>
+            <div class="history-list" id="history">No moves yet</div>
+          </div>
+
+          <div class="footer-note">Made with ❤️ by INFERSTELLEN Team.</div>
+        </div>
+      </div>
     </div>
 
-    <div class="board-wrap" id="bigBoard">
-      <!-- small boards are injected by JS -->
-    </div>
+
   </div>
 
-  <div class="right">
-    <div class="card game-info">
-      <h3>Game Info</h3>
-      <div class="label-muted">Active board: <span id="activeBoardLabel">Any</span></div>
-      <div style="height:8px"></div>
-      <div class="label-muted">Overall winner: <span id="overallWinner">-</span></div>
-
-      <div style="height:12px"></div>
-      <div class="label-muted" style="margin-bottom:8px">Small boards:</div>
-      <div class="small-state-grid" id="smallBoardsState">
-        <!-- states -->
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>How to play</h3>
-      <div class="how">
-        <ol>
-          <li>Players alternate placing marks inside a small 3×3 board.</li>
-          <li>Your move sends the opponent to the corresponding small board by cell index (0–8).</li>
-          <li>If that small board is finished, the opponent may play anywhere.</li>
-          <li>Win three small boards in a row to win the game.</li>
-        </ol>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>History</h3>
-      <div class="history-list" id="history">No moves yet</div>
-    </div>
-
-    <div class="footer-note">Made with ❤️ by INFERSTELLEN Team.</div>
-  </div>
-</div>
-
-<script>
-/* ---------- UI helper: SVG symbols for X and O (colored) ---------- */
-function svgO(color){
-  return `<svg class="sym" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <script>
+    /* ---------- UI helper: SVG symbols for X and O (colored) ---------- */
+    function svgO(color) {
+      return `<svg class="sym" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <circle cx="50" cy="50" r="32" fill="none" stroke="${color}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`;
-}
-function svgX(color){
-  return `<svg class="sym" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    }
+    function svgX(color) {
+      return `<svg class="sym" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <g stroke="${color}" stroke-width="10" stroke-linecap="round">
       <line x1="22" y1="22" x2="78" y2="78"/>
       <line x1="78" y1="22" x2="22" y2="78"/>
     </g>
   </svg>`;
-}
-
-/* ---------- Game state ---------- */
-const X='X', O='O';
-let boards = Array.from({length:9}, ()=>Array(9).fill(null)); // 9 small boards of 9 cells
-let smallWinner = Array(9).fill(null); // X/O/'T'(tie)/null
-let currentPlayer = X;
-let activeBoard = null; // null = any, or 0..8
-let overallWinner = null;
-let history = []; // array of move strings
-
-/* ---------- DOM refs ---------- */
-const bigBoardEl = document.getElementById('bigBoard');
-const currentDot = document.getElementById('playerDot');
-const playerText = document.getElementById('playerText');
-const activeLabel = document.getElementById('activeBoardLabel');
-const smallBoardsStateEl = document.getElementById('smallBoardsState');
-const overallWinnerEl = document.getElementById('overallWinner');
-const historyEl = document.getElementById('history');
-const resetBtn = document.getElementById('resetBtn');
-
-/* ---------- Winning lines ---------- */
-const LINES = [
-  [0,1,2],[3,4,5],[6,7,8], // rows
-  [0,3,6],[1,4,7],[2,5,8], // cols
-  [0,4,8],[2,4,6]          // diags
-];
-
-/* ---------- init UI ---------- */
-function createUI(){
-  bigBoardEl.innerHTML='';
-  for(let b=0;b<9;b++){
-    const sb = document.createElement('div');
-    sb.className='small-board';
-    sb.dataset.board = b;
-    sb.dataset.index = b;
-    // create 9 cells
-    for(let c=0;c<9;c++){
-      const cell = document.createElement('div');
-      cell.className='cell';
-      cell.dataset.board = b;
-      cell.dataset.cell = c;
-      cell.addEventListener('click', onCellClick);
-      sb.appendChild(cell);
     }
-    bigBoardEl.appendChild(sb);
-  }
-  // small boards state panel
-  smallBoardsStateEl.innerHTML='';
-  for(let i=0;i<9;i++){
-    const s = document.createElement('div');
-    s.className='small-state empty';
-    s.id = 'smallState'+i;
-    s.textContent = `${i}: -`;
-    smallBoardsStateEl.appendChild(s);
-  }
-  updatePlayerIndicator();
-  render();
-}
-function updatePlayerIndicator(){
-  // show emoji in the "dot" but keep board marks as SVGs so they remain perfectly colored
-  // emoji placed and scaled to fit inside the dot
-  currentDotStyleColor = (currentPlayer===X) ? getComputedStyle(document.documentElement).getPropertyValue('--x-color').trim() : getComputedStyle(document.documentElement).getPropertyValue('--o-color').trim();
 
-  // Put emoji into the dot
-  currentDot.innerHTML = (currentPlayer===X) ? '❌' : '⭕';
+    /* ---------- Game state ---------- */
+    const X = 'X', O = 'O';
+    let boards = Array.from({ length: 9 }, () => Array(9).fill(null)); // 9 small boards of 9 cells
+    let smallWinner = Array(9).fill(null); // X/O/'T'(tie)/null
+    let currentPlayer = X;
+    let activeBoard = null; // null = any, or 0..8
+    let overallWinner = null;
+    let history = []; // array of move strings
 
-  // set color using CSS -- note: color may be platform-emoji dependent, but this will set fallback text color
-  currentDot.style.color = currentDotStyleColor;
+    /* ---------- DOM refs ---------- */
+    const bigBoardEl = document.getElementById('bigBoard');
+    const currentDot = document.getElementById('playerDot');
+    const playerText = document.getElementById('playerText');
+    const activeLabel = document.getElementById('activeBoardLabel');
+    const smallBoardsStateEl = document.getElementById('smallBoardsState');
+    const overallWinnerEl = document.getElementById('overallWinner');
+    const historyEl = document.getElementById('history');
+    const resetBtn = document.getElementById('resetBtn');
 
-  // keep the text label as the single-letter (X/O) so the UI matches the original layout
-  playerText.textContent = currentPlayer;
-}
+    /* ---------- Winning lines ---------- */
+    const LINES = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // cols
+      [0, 4, 8], [2, 4, 6]          // diags
+    ];
 
-/* ---------- game logic ---------- */
-function onCellClick(e){
-  const b = Number(e.currentTarget.dataset.board);
-  const c = Number(e.currentTarget.dataset.cell);
-  // if overall winner, ignore
-  if(overallWinner) return;
-  // if activeBoard set and clicked elsewhere, ignore
-  if(activeBoard !== null && activeBoard !== b) return;
-  // if small board already finished, ignore
-  if(smallWinner[b]) return;
-  // if cell occupied
-  if(boards[b][c]) return;
-
-  // make move
-  boards[b][c] = currentPlayer;
-  history.push(`${currentPlayer} → board ${b}, cell ${c}`);
-  updateHistory();
-
-  // check small board winner or tie
-  const winner = checkWinner(boards[b]);
-  if(winner){
-    smallWinner[b] = winner === 'T' ? 'T' : winner;
-  } else {
-    // no winner yet
-  }
-
-  // check overall winner using smallWinner as board values (only X/O count)
-  const overall = checkOverallWinner();
-  if(overall){
-    overallWinner = overall === 'T' ? 'T' : overall;
-  }
-
-  // set next active board to the cell index
-  if(!smallWinner[c]) {
-    activeBoard = c;
-  } else {
-    activeBoard = null; // any
-  }
-
-  // toggle player if no overall winner
-  if(!overallWinner) currentPlayer = (currentPlayer===X)?O:X;
-  updatePlayerIndicator();
-  render();
-}
-
-function checkWinner(cells){
-  // cells is array length 9
-  for(const line of LINES){
-    const [a,b,c2]=line;
-    if(cells[a] && cells[a]===cells[b] && cells[a]===cells[c2]) return cells[a];
-  }
-  // tie?
-  if(cells.every(Boolean)) return 'T';
-  return null;
-}
-function checkOverallWinner(){
-  // build array mapping smallWinner to X/O/null (ignore ties as blockers)
-  const m = smallWinner.map(v => (v===X?X: (v===O?O : null)));
-  for(const line of LINES){
-    const [a,b,c] = line;
-    if(m[a] && m[a]===m[b] && m[a]===m[c]) return m[a];
-  }
-  // if all small boards finished and no winner -> tie
-  if(smallWinner.every(v=>v!==null)) return 'T';
-  return null;
-}
-
-/* ---------- rendering ---------- */
-function render(){
-  // update each small board UI
-  for(let b=0;b<9;b++){
-    const sbEl = bigBoardEl.querySelector(`.small-board[data-board="${b}"]`);
-    sbEl.classList.remove('active','won');
-    if(activeBoard === null && !overallWinner){
-      // allow any (visual: subtle glow on all unfinished)
-      if(!smallWinner[b]) sbEl.classList.add('active');
-    } else if(activeBoard === b && !overallWinner){
-      sbEl.classList.add('active');
-    }
-    // if small board won, show overlay with winner symbol
-    const existingOverlay = sbEl.querySelector('.small-winner');
-    if(smallWinner[b] && !existingOverlay){
-      const ov = document.createElement('div');
-      ov.className='small-winner';
-      if(smallWinner[b]==='T'){
-        ov.textContent = '-';
-        ov.style.fontSize='28px';
-        ov.style.opacity='0.9';
-      } else {
-        ov.innerHTML = smallWinner[b] === X ? svgX(getComputedStyle(document.documentElement).getPropertyValue('--x-color').trim()) : svgO(getComputedStyle(document.documentElement).getPropertyValue('--o-color').trim());
-        ov.style.opacity='0.98';
+    /* ---------- init UI ---------- */
+    function createUI() {
+      bigBoardEl.innerHTML = '';
+      for (let b = 0; b < 9; b++) {
+        const sb = document.createElement('div');
+        sb.className = 'small-board';
+        sb.dataset.board = b;
+        sb.dataset.index = b;
+        // create 9 cells
+        for (let c = 0; c < 9; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.board = b;
+          cell.dataset.cell = c;
+          cell.addEventListener('click', onCellClick);
+          sb.appendChild(cell);
+        }
+        bigBoardEl.appendChild(sb);
       }
-      sbEl.appendChild(ov);
-      sbEl.classList.add('won');
-    } else if(!smallWinner[b] && existingOverlay){
-      existingOverlay.remove();
-      sbEl.classList.remove('won');
+      // small boards state panel
+      smallBoardsStateEl.innerHTML = '';
+      for (let i = 0; i < 9; i++) {
+        const s = document.createElement('div');
+        s.className = 'small-state empty';
+        s.id = 'smallState' + i;
+        s.textContent = `${i}: -`;
+        smallBoardsStateEl.appendChild(s);
+      }
+      updatePlayerIndicator();
+      render();
+    }
+    function updatePlayerIndicator() {
+      // show emoji in the "dot" but keep board marks as SVGs so they remain perfectly colored
+      // emoji placed and scaled to fit inside the dot
+      currentDotStyleColor = (currentPlayer === X) ? getComputedStyle(document.documentElement).getPropertyValue('--x-color').trim() : getComputedStyle(document.documentElement).getPropertyValue('--o-color').trim();
+
+      // Put emoji into the dot
+      currentDot.innerHTML = (currentPlayer === X) ? '❌' : '⭕';
+
+      // set color using CSS -- note: color may be platform-emoji dependent, but this will set fallback text color
+      currentDot.style.color = currentDotStyleColor;
+
+      // keep the text label as the single-letter (X/O) so the UI matches the original layout
+      playerText.textContent = currentPlayer;
     }
 
-    // update cells
-    const cells = sbEl.querySelectorAll('.cell');
-    for(let c=0;c<9;c++){
-      const el = cells[c];
-      el.classList.remove('disabled');
-      el.innerHTML = '';
-      const val = boards[b][c];
-      if(val){
-        el.innerHTML = val === X ? svgX(getComputedStyle(document.documentElement).getPropertyValue('--x-color').trim()) : svgO(getComputedStyle(document.documentElement).getPropertyValue('--o-color').trim());
-        el.classList.add('disabled');
+    /* ---------- game logic ---------- */
+    function onCellClick(e) {
+      const b = Number(e.currentTarget.dataset.board);
+      const c = Number(e.currentTarget.dataset.cell);
+      // if overall winner, ignore
+      if (overallWinner) return;
+      // if activeBoard set and clicked elsewhere, ignore
+      if (activeBoard !== null && activeBoard !== b) return;
+      // if small board already finished, ignore
+      if (smallWinner[b]) return;
+      // if cell occupied
+      if (boards[b][c]) return;
+
+      // make move
+      boards[b][c] = currentPlayer;
+      history.push(`${currentPlayer} → board ${b}, cell ${c}`);
+      updateHistory();
+
+      // check small board winner or tie
+      const winner = checkWinner(boards[b]);
+      if (winner) {
+        smallWinner[b] = winner === 'T' ? 'T' : winner;
       } else {
-        // if that small board finished or not active, maybe disable clicking (visual)
-        if(smallWinner[b] || (activeBoard !== null && activeBoard !== b) || overallWinner) {
-          el.classList.add('disabled');
+        // no winner yet
+      }
+
+      // check overall winner using smallWinner as board values (only X/O count)
+      const overall = checkOverallWinner();
+      if (overall) {
+        overallWinner = overall === 'T' ? 'T' : overall;
+      }
+
+      // set next active board to the cell index
+      if (!smallWinner[c]) {
+        activeBoard = c;
+      } else {
+        activeBoard = null; // any
+      }
+
+      // toggle player if no overall winner
+      if (!overallWinner) currentPlayer = (currentPlayer === X) ? O : X;
+      updatePlayerIndicator();
+      render();
+    }
+
+    function checkWinner(cells) {
+      // cells is array length 9
+      for (const line of LINES) {
+        const [a, b, c2] = line;
+        if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c2]) return cells[a];
+      }
+      // tie?
+      if (cells.every(Boolean)) return 'T';
+      return null;
+    }
+    function checkOverallWinner() {
+      // build array mapping smallWinner to X/O/null (ignore ties as blockers)
+      const m = smallWinner.map(v => (v === X ? X : (v === O ? O : null)));
+      for (const line of LINES) {
+        const [a, b, c] = line;
+        if (m[a] && m[a] === m[b] && m[a] === m[c]) return m[a];
+      }
+      // if all small boards finished and no winner -> tie
+      if (smallWinner.every(v => v !== null)) return 'T';
+      return null;
+    }
+
+    /* ---------- rendering ---------- */
+    function render() {
+      // update each small board UI
+      for (let b = 0; b < 9; b++) {
+        const sbEl = bigBoardEl.querySelector(`.small-board[data-board="${b}"]`);
+        sbEl.classList.remove('active', 'won');
+        if (activeBoard === null && !overallWinner) {
+          // allow any (visual: subtle glow on all unfinished)
+          if (!smallWinner[b]) sbEl.classList.add('active');
+        } else if (activeBoard === b && !overallWinner) {
+          sbEl.classList.add('active');
+        }
+        // if small board won, show overlay with winner symbol
+        const existingOverlay = sbEl.querySelector('.small-winner');
+        if (smallWinner[b] && !existingOverlay) {
+          const ov = document.createElement('div');
+          ov.className = 'small-winner';
+          if (smallWinner[b] === 'T') {
+            ov.textContent = '-';
+            ov.style.fontSize = '28px';
+            ov.style.opacity = '0.9';
+          } else {
+            ov.innerHTML = smallWinner[b] === X ? svgX(getComputedStyle(document.documentElement).getPropertyValue('--x-color').trim()) : svgO(getComputedStyle(document.documentElement).getPropertyValue('--o-color').trim());
+            ov.style.opacity = '0.98';
+          }
+          sbEl.appendChild(ov);
+          sbEl.classList.add('won');
+        } else if (!smallWinner[b] && existingOverlay) {
+          existingOverlay.remove();
+          sbEl.classList.remove('won');
+        }
+
+        // update cells
+        const cells = sbEl.querySelectorAll('.cell');
+        for (let c = 0; c < 9; c++) {
+          const el = cells[c];
+          el.classList.remove('disabled');
+          el.innerHTML = '';
+          const val = boards[b][c];
+          if (val) {
+            el.innerHTML = val === X ? svgX(getComputedStyle(document.documentElement).getPropertyValue('--x-color').trim()) : svgO(getComputedStyle(document.documentElement).getPropertyValue('--o-color').trim());
+            el.classList.add('disabled');
+          } else {
+            // if that small board finished or not active, maybe disable clicking (visual)
+            if (smallWinner[b] || (activeBoard !== null && activeBoard !== b) || overallWinner) {
+              el.classList.add('disabled');
+            }
+          }
         }
       }
-    }
-  }
 
-  // update small boards state panel
-  for(let i=0;i<9;i++){
-    const el = document.getElementById('smallState'+i);
-    const v = smallWinner[i];
-    el.classList.toggle('empty', !v);
-    el.textContent = `${i}: ${v ? (v==='T' ? 'T' : v) : '-'}`;
-  }
-
-  // active board label
-  activeLabel.textContent = activeBoard===null ? 'Any' : String(activeBoard);
-
-  overallWinnerEl.textContent = overallWinner ? (overallWinner==='T' ? 'T' : overallWinner) : '-';
-
-  // highlight precise active board: remove 'active' from all, then add to either target or all unfinished
-  for(const sb of bigBoardEl.querySelectorAll('.small-board')) sb.classList.remove('active');
-  if(!overallWinner) {
-    if(activeBoard === null){
-      for(const sb of bigBoardEl.querySelectorAll('.small-board')) {
-        const idx = Number(sb.dataset.board);
-        if(!smallWinner[idx]) sb.classList.add('active');
+      // update small boards state panel
+      for (let i = 0; i < 9; i++) {
+        const el = document.getElementById('smallState' + i);
+        const v = smallWinner[i];
+        el.classList.toggle('empty', !v);
+        el.textContent = `${i}: ${v ? (v === 'T' ? 'T' : v) : '-'}`;
       }
-    } else {
-      const dest = bigBoardEl.querySelector(`.small-board[data-board="${activeBoard}"]`);
-      if(dest) dest.classList.add('active');
+
+      // active board label
+      activeLabel.textContent = activeBoard === null ? 'Any' : String(activeBoard);
+
+      overallWinnerEl.textContent = overallWinner ? (overallWinner === 'T' ? 'T' : overallWinner) : '-';
+
+      // highlight precise active board: remove 'active' from all, then add to either target or all unfinished
+      for (const sb of bigBoardEl.querySelectorAll('.small-board')) sb.classList.remove('active');
+      if (!overallWinner) {
+        if (activeBoard === null) {
+          for (const sb of bigBoardEl.querySelectorAll('.small-board')) {
+            const idx = Number(sb.dataset.board);
+            if (!smallWinner[idx]) sb.classList.add('active');
+          }
+        } else {
+          const dest = bigBoardEl.querySelector(`.small-board[data-board="${activeBoard}"]`);
+          if (dest) dest.classList.add('active');
+        }
+      }
+
+      // if overall winner, display a subtle message in history
+      if (overallWinner) {
+        addHistory(`Game Over: ${overallWinner === 'T' ? 'Tie' : overallWinner + ' wins overall'}`);
+      }
     }
-  }
 
-  // if overall winner, display a subtle message in history
-  if(overallWinner){
-    addHistory(`Game Over: ${overallWinner==='T' ? 'Tie' : overallWinner + ' wins overall'}`);
-  }
-}
+    /* ---------- history UI ---------- */
+    function updateHistory() {
+      if (history.length === 0) {
+        historyEl.textContent = 'No moves yet';
+        return;
+      }
+      // show latest 50 moves
+      const list = history.slice(-200).map((h, i) => `<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02)">${h}</div>`).join('');
+      historyEl.innerHTML = list;
+    }
+    function addHistory(text) {
+      history.push(text);
+      updateHistory();
+    }
 
-/* ---------- history UI ---------- */
-function updateHistory(){
-  if(history.length === 0){
-    historyEl.textContent = 'No moves yet';
-    return;
-  }
-  // show latest 50 moves
-  const list = history.slice(-200).map((h,i)=>`<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02)">${h}</div>`).join('');
-  historyEl.innerHTML = list;
-}
-function addHistory(text){
-  history.push(text);
-  updateHistory();
-}
+    /* ---------- reset ---------- */
+    function resetGame() {
+      boards = Array.from({ length: 9 }, () => Array(9).fill(null));
+      smallWinner = Array(9).fill(null);
+      currentPlayer = X;
+      activeBoard = null;
+      overallWinner = null;
+      history = [];
+      updatePlayerIndicator();
+      // remove any overlays that might exist
+      for (const sb of bigBoardEl.querySelectorAll('.small-board .small-winner')) {
+        sb.remove();
+      }
+      render();
+      updateHistory();
+    }
+    resetBtn.addEventListener('click', () => { resetGame(); });
 
-/* ---------- reset ---------- */
-function resetGame(){
-  boards = Array.from({length:9}, ()=>Array(9).fill(null));
-  smallWinner = Array(9).fill(null);
-  currentPlayer = X;
-  activeBoard = null;
-  overallWinner = null;
-  history = [];
-  updatePlayerIndicator();
-  // remove any overlays that might exist
-  for(const sb of bigBoardEl.querySelectorAll('.small-board .small-winner') ) {
-    sb.remove();
-  }
-  render();
-  updateHistory();
-}
-resetBtn.addEventListener('click', ()=>{ resetGame(); });
+    /* ---------- init ---------- */
+    createUI();
+    updateHistory();
 
-/* ---------- init ---------- */
-createUI();
-updateHistory();
+    /* make sure player dot shows up on load */
+    updatePlayerIndicator();
 
-/* make sure player dot shows up on load */
-updatePlayerIndicator();
-
-</script>
+  </script>
 </body>
+
 </html>
