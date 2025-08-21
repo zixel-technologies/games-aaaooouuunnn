@@ -1,201 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="icon.png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AOUN (@aaaooouuunnn)</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <link rel="icon" type="image/png" href="icon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AOUN (@aaaooouuunnn)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #000000;
-            font-family: 'DM Sans', sans-serif;
-            padding: 16px 8px 16px 8px; /* top right bottom left */
-            color: #BFBFBF;
-        }
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: #000000;
+      font-family: 'DM Sans', sans-serif;
+      color: #BFBFBF;
+    }
 
-        .top-header {
-            width: 100%;
-            background: #000000;
-            padding: 24px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 100;
-        }
+    .top-header {
+      width: 100%;
+      background: #000000;
+      padding: 24px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+    }
 
-        .home-icon {
-            color: #BFBFBF;
-            font-size: 1.5em;
-            text-decoration: none;
-        }
+    .home-icon {
+      color: #BFBFBF;
+      font-size: 1.5em;
+      text-decoration: none;
+    }
 
-        .home-icon:hover {
-            color: #ffffff;
-            transition: color 0.25s;
-        }
+    .home-icon:hover {
+      color: #ffffff;
+      transition: color 0.25s;
+    }
 
-        .container {
-            padding-top: 96px;   /* Adjust based on header height */
-            padding-bottom: 96px; /* Adjust based on footer height */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 1024px;
-            width: 100%;
-        }
+    .footer {
+      width: 100%;
+      background: #000000;
+      padding: 24px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+    }
 
-        .content {
-            padding: 20px;
-            width: 100%;
-        }
+    .footer a {
+      color: #BFBFBF;
+      font-size: 1.5em;
+      text-decoration: none;
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    .footer a:hover {
+      color: #ffffff;
+      transition: color 0.25s;
+    }
 
-        .header h1 {
-            font-size: 2.5em;
-        }
+    /* PDF area */
+    .pdf-wrapper {
+      position: absolute;
+      top: 72px; /* leave room for header */
+      bottom: 72px; /* leave room for footer */
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+    }
 
-        .header p {
-            font-size: 1.2em;
-        }
+    .pdf-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .footer {
-            width: 100%;
-            background: #000000;
-            padding: 24px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-        }
-
-        .footer a {
-            color: #BFBFBF;
-            font-size: 1.5em;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            color: #ffffff;
-            transition: color 0.25s;
-        }
-
-        p, li {
-            text-align: justify;
-        }
-
-        .button-wrapper {
-            margin-top: 40px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .contact-button {
-            background-color: #BFBFBF;
-            color: black;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 1.5em;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: background-color 0.25s;
-        }
-
-        .contact-button:hover {
-            background-color: white;
-            color: black;
-        }
-    </style>
+    .pdf-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      aspect-ratio: 16 / 9;
+      object-fit: contain; /* maintain ratio */
+      background: #000;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="top-header">
-        <a href="https://aaaooouuunnn.com" class="home-icon" title="Home">
-            <i class="fas fa-home"></i>
-        </a>
-    </div>
+  <!-- Header -->
+  <div class="top-header">
+    <a href="https://linktr.ee/stupidgrizz" class="home-icon" title="Home">
+      <i class="fas fa-home"></i>
+    </a>
+  </div>
 
-    <div class="container">
-        <div class="content">
-            <div class="header">
-                <h1>AOUN</h1>
-                <br>
-                <h3>Rendering Odd Things into Beautiful Chaos!</h3>
-                <br>
-                <h4>I make stuff. Cool stuff. Weird stuff.</h4>
-            </div>
-            <br>
-            <p>Need a game that'll make players forget what day it is? Done.</p>
-            <p>A movie that keeps audiences on the edge of their seats? Absolutely.</p>
-            <p>That promo, that makes your product look like it’s from the future? You bet!</p>
-            <br>
-            <p>Over 4 years, I’ve brought countless ideas to life — crafting everything from cinematic short films and dynamic animations to detailed environments and game-ready assets. Whether it’s creating hyper-realistic product visualizations, building character-driven narratives, or assembling interactive virtual spaces, I meticulously shape every element to ensure it resonates with precision, creativity, and purpose.</p>
-            <br>
-            <h3>3D & Game Design</h3>
-            <p>Characters, environments, and animations that could live in a game or an alternate reality.</p>
-            <br>
-            <h3>Animation</h3>
-            <p>Product animations, dynamic motion design, and full character animations for games, films, and interactive experiences.</p>
-            <br>
-            <h3>Texturing & Lighting</h3>
-            <p>Detailed surfaces with hand-painted, procedural, and PBR workflows, paired with real-time and baked lighting setups for stunning visuals.</p>
-            <br>
-            <h3>Interactive 3D & AR/VR</h3>
-            <p>Building immersive virtual environments for interactive web experiences, games, and XR applications.</p>
-            <br>
-            <h3>Optimization</h3>
-            <p>Game-ready assets through efficient retopology, UV unwrapping, LODs, and performance-friendly techniques without sacrificing detail.</p>
-            <br>
-            <h3>Product & Architectural Visualization</h3>
-            <p>High-quality product and architectural renders with attention to materials, design accuracy, and storytelling through visuals.</p>
-            <br>
-            <h3>CAD & Parametric Design</h3>
-            <p>Precision-driven 3D modeling for manufacturing, engineering, and product development.</p>
-            <br>
-            <h3>VFX & Simulations</h3>
-            <p>Simulating elements like fire, water, smoke, and destruction, along with cinematic compositing to add depth and realism to any scene.</p>
-            <p>Cinematic shots, real-time animation, and enough visual effects to make Michael Bay blush.</p>
-            <p>Particles, fluids, or entire worlds collapsing in slow motion — I make digital destruction beautiful.</p>
-            <br>
-            <p style="text-align: center; font-size: 1.2em;">
-                Let’s build something extraordinary together! 🚀
-            </p>
-
-            <div class="button-wrapper">
-                <a href="https://aaaooouuunnn.com/contact">
-                    <button class="contact-button">Contact me</button>
-                </a>
-            </div>
-        </div>
+  <!-- PDF Viewer -->
+  <div class="pdf-wrapper">
+    <div class="pdf-container">
+      <iframe src="aoun.pdf"></iframe>
     </div>
+  </div>
 
-    <div class="footer">
-        <a href="mailto:email@aaaooouuunnn.com" title="Email"><i class="fas fa-envelope"></i></a>
-        <a href="https://linkedin.com/in/aaaooouuunnn" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-        <a href="https://instagram.com/aaaooouuunnn" title="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="https://youtube.com/@aaaooouuunnn" title="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="https://twitter.com/aaaooouuunnn" title="Twitter/X"><i class="fab fa-twitter"></i></a>
-    </div>
+  <!-- Footer -->
+  <div class="footer">
+    <a href="mailto:grizzzirg@yahoo.com" title="Email"><i class="fas fa-envelope"></i></a>
+  </div>
 
 </body>
 </html>
