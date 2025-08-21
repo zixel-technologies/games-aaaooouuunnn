@@ -34,6 +34,7 @@
     .board-container {
       display: flex;
       align-items: center;
+      gap: 30px;
       /* flex-wrap: wrap; */
     }
 
@@ -49,6 +50,12 @@
     /* Left column (game) */
     .left {
       flex: 0 0 780px;
+    }
+
+    .controls-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     h1 {
@@ -224,7 +231,7 @@
     }
 
     .history-list {
-      height: 140px;
+      height: 95px;
       overflow: auto;
       background: #232323;
       padding: 10px;
@@ -312,19 +319,21 @@
   <div class="wrap">
     <div class="left">
       <h1>Super Tic Tac Toe</h1>
-      <p class="lead">Play on the 3×3 boards. Win small boards to win the game.</p>
+      <div class="controls-container">
+        <p class="lead">Play on the 3×3 boards. Win small boards to win the game.</p>
 
-      <div class="controls">
-        <div class="current" id="currentIndicator">
-          <span class="label-muted">Current</span>
-          <div style="width:10px"></div>
-          <div class="dot" id="playerDot" title="Current player">
-            <!-- emoji injected by JS -->
+        <div class="controls">
+          <div class="current" id="currentIndicator">
+            <span class="label-muted">Current</span>
+            <div style="width:10px"></div>
+            <div class="dot" id="playerDot" title="Current player">
+              <!-- emoji injected by JS -->
+            </div>
+            <div style="width:8px"></div>
+            <div id="playerText" style="color:#e6e6e6;font-weight:600">X</div>
           </div>
-          <div style="width:8px"></div>
-          <div id="playerText" style="color:#e6e6e6;font-weight:600">X</div>
+          <button class="btn" id="resetBtn">Reset</button>
         </div>
-        <button class="btn" id="resetBtn">Reset</button>
       </div>
 
       <div class="board-container">
@@ -363,13 +372,14 @@
             <div class="history-list" id="history">No moves yet</div>
           </div>
 
-          <div class="footer-note">Made with ❤️ by INFERSTELLEN Team.</div>
+
         </div>
       </div>
     </div>
 
 
   </div>
+  <div class="footer-note">Made with ❤️ by INFERSTELLEN Team.</div>
 
   <script>
     /* ---------- UI helper: SVG symbols for X and O (colored) ---------- */
